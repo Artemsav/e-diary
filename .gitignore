@@ -25,11 +25,11 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-migrations/
-templates/
-models.py
-views.py
-project/
+.migrations/
+.templates/
+.models.py
+.views.py
+.project/
 manage.py
 requirements.txt
 schoolbase.sqlite3
