@@ -29,7 +29,8 @@ MANIFEST
 .templates/
 .models.py
 .views.py
-.project/
+project/
+datacenter/
 manage.py
 requirements.txt
 schoolbase.sqlite3
