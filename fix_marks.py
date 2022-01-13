@@ -14,8 +14,6 @@ def find_schoolkid(schoolkid):
     else:
         print('Пожалуйста проверьте имя ученика. Имя {schoolkid} некорректно. Для поиска необходимо использовать как имя, так и фамилию ученика'.format(schoolkid=schoolkid))
 
-    
-
 def find_subject(subject, years=6):
     find_subject = Subject.objects.filter(title=subject, year_of_study=years)
     print(find_subject)
@@ -38,17 +36,7 @@ def create_commendation(schoolkid, subject, year_of_study=6, group_letter='А'):
     Commendation_truple = ('Молодец!', 'Отлично!', 'Хорошо!', 'Сказано здорово – просто и ясно!', 'Ты меня приятно удивил!', 'Великолепно!', 'Прекрасно!', 'Ты меня очень обрадовал!','Ты, как всегда, точен!')
     last_lesson = Lesson.objects.filter(year_of_study=year_of_study, group_letter=group_letter, subject=subject).last()
     Commendation.objects.create(text=random.choice(Commendation_truple), created=last_lesson.date, schoolkid=schoolkid, subject=subject, teacher=last_lesson.teacher)
-    
-'''def parser():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('schoolkid', help='Please type in name of schoolkid')
-    parser.add_argument('subject', help='Please type in required subject', default=None)
-    args = parser.parse_args()
-    if args.subject:
-        return (args.schoolkid, args.subject)
-    else:
-        return (args.schoolkid)    '''
-    
+      
 
 if __name__ == '__main__':
     try:
