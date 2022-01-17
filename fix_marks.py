@@ -41,17 +41,20 @@ def create_commendation(schoolkid, subject):
 
 def parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('schoolkid', nargs=2, help = 'Please type name and surname')
-    parser.add_argument('-s', '--subject', action='extend', nargs=1, help = 'Subject for commendation')
+    parser.add_argument('schoolkid_surname_name', nargs=2, help = 'Please type name and surname')
+    parser.add_argument('-s', '--subject', action='store', nargs=1, help = 'Subject for commendation')
     try:    
         args = parser.parse_args()
-        if args.subject and args.schoolkid:
-            this_list = args.schoolkid + args.subject
+        print(args)
+        if args.subject and args.schoolkid_surname_name:
+            this_list = args.schoolkid_surname_name +args.subject
+            fin = dict(name=args.schoolkid_surname_name, subject = args.subject)
+            print(fin)
         else:
-            this_list = [args.schoolkid]
+            this_list = args.schoolkid_surname_name
         print(this_list)
     except SystemExit:
-        print('Программа завершила работу неправильно, проверьте задаваемые атрибуты')
+        print('Программа завершила работу неправильно, проверьте задаваемые атрибуты, имя ученика должно содержать сначало Фамилию, затем Имя, через пробел')
          
 
 if __name__ == '__main__':
