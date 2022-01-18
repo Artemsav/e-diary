@@ -4,19 +4,18 @@ import random
 
 import django
 
-from datacenter.models import (Chastisement, Commendation, Lesson, Mark,
-                               Schoolkid, Subject)
-
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')
 django.setup()
 
+from datacenter.models import (Chastisement, Commendation, Lesson, Mark,
+                               Schoolkid, Subject)
 
 def find_schoolkid(schoolkid):
     kid = Schoolkid.objects.filter(full_name__contains=schoolkid)
     if len(kid) == 1:
         return kid[0]
     else:
-        print('Пожалуйста проверьте имя ученика. Имя {schoolkid} некорректно. Для поиска необходимо использовать как имя, так и фамилию ученика'.format(schoolkid=schoolkid))
+        print('Пожалуйста проверьте имя ученика. Имя {schoolkid} некорректно. Для поиска необходимо использовать как имя, так и фамилию ученика.'.format(schoolkid=schoolkid))
 
 
 def find_subject(subject, schoolkid):
@@ -24,7 +23,7 @@ def find_subject(subject, schoolkid):
     if len(find_subject) == 1:
         return find_subject[0]
     else:
-        print('Пожалуйста проверьте название предмета. Название предмета {subject} некорректно. Для поиска необходимо использовать корректное название'.format(subject=subject))
+        print('Пожалуйста проверьте название предмета. Название предмета {subject} некорректно. Для поиска необходимо использовать корректное название.'.format(subject=subject))
 
 
 def fix_marks(schoolkid):
