@@ -45,23 +45,26 @@ def parser():
     parser.add_argument('-s', '--subject', action='store', nargs=1, help = 'Subject for commendation')
     try:    
         args = parser.parse_args()
-        print(args)
         if args.subject and args.schoolkid_surname_name:
-            this_list = args.schoolkid_surname_name +args.subject
-            fin = dict(name=args.schoolkid_surname_name, subject = args.subject)
-            print(fin)
+            user_input = dict(schoolkid=' '.join(args.schoolkid_surname_name), subject = ''.join(args.subject))
+            return user_input
         else:
-            this_list = args.schoolkid_surname_name
-        print(this_list)
+            user_input = dict(schoolkid=' '.join(args.schoolkid_surname_name))
+            return user_input
     except SystemExit:
         print('Программа завершила работу неправильно, проверьте задаваемые атрибуты, имя ученика должно содержать сначало Фамилию, затем Имя, через пробел')
          
 
 if __name__ == '__main__':
     try:
-        '''fix_marks(find_schoolkid('John'))
-        remove_chastisements(find_schoolkid('Голубев Феофан'))
-        create_commendation(find_schoolkid('Фролов Иван'), find_subject('Технология', find_schoolkid('Голубев Феофан')))'''
-        parser()
+        user_input = parser()
+        fix_marks(find_schoolkid(user_input['schoolkid']))
+        print('Ученик найден')
+        print('Оценки исправлены')
+        remove_chastisements(find_schoolkid(user_input['schoolkid']))
+        print('Замечания удалены')
+        if user_input.get('subject'):
+            create_commendation(find_schoolkid(user_input['schoolkid']), find_subject(user_input['subject'], find_schoolkid(user_input['schoolkid'])))
+            print('Благодарность присвоена')
     except AttributeError:
         print('Программа завершила работу неправильно, проверьте задаваемые атрибуты')
