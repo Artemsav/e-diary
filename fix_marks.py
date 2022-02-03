@@ -2,7 +2,6 @@ import argparse
 import os
 import random
 import django
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')
 django.setup()
 from datacenter.models import (Chastisement, Commendation, Lesson, Mark,
@@ -54,19 +53,17 @@ def create_commendation(schoolkid, subject):
 def parse_user_input():
     parser = argparse.ArgumentParser()
     parser.add_argument('schoolkid_surname_name',
-                        nargs=2,
                         help='Please type name and surname',
                         )
     parser.add_argument('-s',
                         '--subject',
                         action='store',
-                        nargs=1,
                         help='Subject for commendation'
                         )
     args = parser.parse_args()
     if args.subject and args.schoolkid_surname_name:
-        user_input = dict(schoolkid=' '.join(args.schoolkid_surname_name),
-                          subject=''.join(args.subject),
+        user_input = dict(schoolkid=args.schoolkid_surname_name,
+                          subject=args.subject,
                           )
         return user_input
     else:
@@ -89,13 +86,13 @@ if __name__ == '__main__':
         print('Оценки исправлены')
         remove_chastisements(find_schoolkid(schoolkid))
         print('Замечания удалены')
-    except ObjectDoesNotExist:
+    except Schoolkid.DoesNotExist:
         print('Ученик не найден. '
               'Пожалуйста проверьте имя ученика. Имя {schoolkid} некорректно. '
               'Для поиска необходимо использовать как имя, '
               'так и фамилию ученика.'.format(schoolkid=schoolkid),
               )
-    except MultipleObjectsReturned:
+    except Schoolkid.MultipleObjectsReturned:
         print('Найдено несколько учеников по данному запросу. '
               'Пожалуйста проверьте имя ученика. Имя {schoolkid} некорректно.'
               'Для поиска необходимо использовать как имя, так и фамилию'
@@ -110,14 +107,14 @@ if __name__ == '__main__':
                                              ),
                                 )
             print('Благодарность присвоена')
-    except ObjectDoesNotExist:
+    except Subject.DoesNotExist:
         print('Предмет не найден. Пожалуйста проверьте название предмета.'
               'Название предмета {subject} некорректно. Для поиска необходимо'
               'использовать корректное название.'.format(subject=subject),
               )
-    except MultipleObjectsReturned:
+    except Subject.MultipleObjectsReturned:
         print('Найдено несколько предметов по данному запросу.'
               'Пожалуйста проверьте название предмета. Название'
-              'предмета {subject} некорректно. Для поиска необходимо'
+              'предмета {subject} некорректно. Для поиска необходимо '
               'использовать корректное название.'.format(subject=subject),
               )
