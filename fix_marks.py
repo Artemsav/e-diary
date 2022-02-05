@@ -61,60 +61,48 @@ def parse_user_input():
                         help='Subject for commendation'
                         )
     args = parser.parse_args()
-    if args.subject and args.schoolkid_surname_name:
-        user_input = dict(schoolkid=args.schoolkid_surname_name,
-                          subject=args.subject,
-                          )
-        return user_input
-    else:
-        user_input = dict(schoolkid=' '.join(args.schoolkid_surname_name))
-        return user_input
+    return args
 
 
 if __name__ == '__main__':
+    input_schoolkid_subject = parse_user_input()
+    schoolkid_surname_name = input_schoolkid_subject.schoolkid_surname_name
     try:
-        input_schoolkid_subject = parse_user_input()
-        schoolkid = input_schoolkid_subject['schoolkid']
-    except SystemExit:
-        print('Программа завершила работу неправильно,'
-              'проверьте задаваемые атрибуты',
-              )
-        exit()
-    try:
-        fix_marks(find_schoolkid(schoolkid))
+        schoolkid = find_schoolkid(schoolkid_surname_name)
+        fix_marks(schoolkid)
         print('Ученик найден')
         print('Оценки исправлены')
-        remove_chastisements(find_schoolkid(schoolkid))
+        remove_chastisements(schoolkid)
         print('Замечания удалены')
+        try:
+            if input_schoolkid_subject.subject:
+                subject = input_schoolkid_subject.subject
+                create_commendation(schoolkid,
+                                    find_subject(subject,
+                                                 schoolkid,
+                                                 ),
+                                    )
+            print('Благодарность присвоена')
+        except Subject.DoesNotExist:
+            print('Предмет не найден. Пожалуйста проверьте название предмета.'
+                  'Название предмета {subject} некорректно. Для поиска необходимо'
+                  'использовать корректное название.'.format(subject=subject),
+                  )
+        except Subject.MultipleObjectsReturned:
+            print('Найдено несколько предметов по данному запросу.'
+                  'Пожалуйста проверьте название предмета. Название'
+                  'предмета {subject} некорректно. Для поиска необходимо '
+                  'использовать корректное название.'.format(subject=subject),
+                  )
     except Schoolkid.DoesNotExist:
         print('Ученик не найден. '
               'Пожалуйста проверьте имя ученика. Имя {schoolkid} некорректно. '
               'Для поиска необходимо использовать как имя, '
-              'так и фамилию ученика.'.format(schoolkid=schoolkid),
+              'так и фамилию ученика.'.format(schoolkid=schoolkid_surname_name),
               )
     except Schoolkid.MultipleObjectsReturned:
         print('Найдено несколько учеников по данному запросу. '
               'Пожалуйста проверьте имя ученика. Имя {schoolkid} некорректно.'
               'Для поиска необходимо использовать как имя, так и фамилию'
-              'ученика.'.format(schoolkid=schoolkid),
-              )
-    try:
-        if input_schoolkid_subject.get('subject'):
-            subject = input_schoolkid_subject['subject']
-            create_commendation(find_schoolkid(schoolkid),
-                                find_subject(subject,
-                                find_schoolkid(schoolkid),
-                                             ),
-                                )
-            print('Благодарность присвоена')
-    except Subject.DoesNotExist:
-        print('Предмет не найден. Пожалуйста проверьте название предмета.'
-              'Название предмета {subject} некорректно. Для поиска необходимо'
-              'использовать корректное название.'.format(subject=subject),
-              )
-    except Subject.MultipleObjectsReturned:
-        print('Найдено несколько предметов по данному запросу.'
-              'Пожалуйста проверьте название предмета. Название'
-              'предмета {subject} некорректно. Для поиска необходимо '
-              'использовать корректное название.'.format(subject=subject),
+              'ученика.'.format(schoolkid=schoolkid_surname_name),
               )
